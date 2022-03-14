@@ -1,0 +1,4 @@
+feh -B black \
+-N \
+--scale-down \
+--no-screen-clip
