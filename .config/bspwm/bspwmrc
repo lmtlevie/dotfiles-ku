@@ -33,7 +33,7 @@ bspc rule -a Screenkey manage=off
 
 
 feh --bg-fill /home/lucio/Pictures/d.jpg
-/home/lucio/.config/polybar/./launch.sh --shades
+/home/lucio/.config/polybar/./launch.sh --shades &
 picom --experimental-backends &
 bspc config border_width 0
 polychromatic-cli -o brightness -p 0
