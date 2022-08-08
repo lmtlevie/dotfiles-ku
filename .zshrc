@@ -133,7 +133,13 @@ alias wifir="service network-manager restart"
 alias ll="lsd -la"
 alias vim='nvim'
 alias copy='xclip -sel clip'
+alias gits='git status'
+alias token='~/Dev && cat token | copy'
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/bin:~/go/bin:~/.local/bin:~/.cargo/bin
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

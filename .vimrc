@@ -11,12 +11,18 @@ set sw=2
 syntax enable
 set background=dark
 set tabstop=4
+set shiftwidth=4
+set expandtab
 set autoindent
 set laststatus=2
 set splitright
 set noshowmode
 set termguicolors
 set cursorline
+set tw=80
+set breakindent
+set formatoptions=1
+set lbr
 
 call plug#begin('~/.vim/plugged')
 
@@ -47,12 +53,16 @@ Plug 'sirver/ultisnips'
 
 Plug 'neoclide/coc.nvim', {'branch':'release'}
 
+" Debugger
+Plug 'puremourning/vimspector'
 
 call plug#end()
 let g:seoul256_background = 234
 
 colorscheme seoul256
 "color panda
+
+let g:vimspector_enable_mappings = 'HUMAN'
 let g:diminactive_use_colorcolumn = 2
 let NERDTreeQuitOnOpen=1
 let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
