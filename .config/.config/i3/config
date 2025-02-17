@@ -1,0 +1,416 @@
+#To do list
+#fix up bar
+#
+# See http://i3wm.org/docs/userguide.html for a complete reference!
+
+set $mod Mod4
+
+#default keyboard repeat is too slow for me
+#exec xset r rate 175 25
+
+#AUTOSTART STUFF
+exec_always --no-startup-id feh --bg-scale ~/.dotfiles/wallpaper.*
+exec_always --no-startup-id compton -b -f
+exec --no-startup-id redshift 
+exec --no-startup-id xautolock -time 30 -locker "~/.dotfiles/scripts/i3exit suspend" -detectsleep -notify 30 -notifier "dunstify -u critical 'Locking Screen and suspend in 30 seconds'" 
+exec --no-startup-id xset dpms 0 600 0
+exec --no-startup-id termite
+exec --no-startup-id dunst
+exec --no-startup-id nm-applet
+exec --no-startup-id clipit
+#exec --no-startup-id volumeicon
+# Open Workspace 2
+exec --no-startup-id i3-msg 'workspace $workspace2'
+# Create a screenshots folder in /tmp
+exec --no-startup-id mkdir /tmp/screenshots
+
+
+#Font for window titles.
+font pango:FuraMono Nerd Font Medium 13
+#Colors
+set $back               #383C4A
+set $primary            #D0D0D0
+set $secondary          #0FE0C9
+set $black              #282A2E
+set $grey               #303030
+set $white              #C5C8C6
+
+# class                 border   backgr.  text    indicator child_border
+client.focused          $primary $primary $black  #2e9ef4   $primary
+client.focused_inactive $black   $primary $black  #484e50   $black
+client.unfocused        $black   $back    $white  #292d2e   $black
+client.urgent           #2f343a  #900000  $white  #900000   #900000
+client.placeholder      #000000  #0c0c0c  $white  #000000   #0c0c0c
+client.background       $white
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+popup_during_fullscreen smart
+bindsym $mod+t exec termite
+bindsym $mod+Return exec termite
+mouse_warping none
+
+for_window [class="^.*"] border pixel 2
+# Float Guake to the top of the screen
+# for_window [class="Main.py"] floating enable, border none, move position 0 25
+
+# Scratchpad stuff
+# Make the currently focused window a scratchpad
+bindsym $mod+Shift+s move scratchpad
+# Show the first scratchpad window
+bindsym $mod+s scratchpad show
+
+# i3-gaps stuff :)
+gaps inner 10
+gaps outer 0
+smart_borders on
+new_window none
+
+bindsym $mod+g exec ~/.dotfiles/scripts/toggle_gaps.sh
+#edit gaps mode
+#########################################################################
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0 bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+##########################################################################
+
+#custom app commands (?i) just means case insenitive..
+#for_window [class="(?i)feh"] floating enable
+for_window [class="(?i)pavucontrol"] floating enable
+for_window [class="(?i)qemu-system-x86_64"] floating enable
+#for_window [class="VirtualBox Manager"] floating enable
+#for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [title="About Mozilla Firefox"] floating enable
+for_window [title="About Nightly"] floating enable
+for_window [title="Library"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
+for_window [class="float-window"] floating enable
+for_window [class="Gnome-terminal"] floating enable
+for_window [class="(?i)gsimplecal"] floating enable, move position mouse, move down 22 px      # 22 is the height of polybar
+ 
+
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# start rofi (program launcher)
+bindsym $mod+d exec --no-startup-id rofi -monitor -4 -show run
+# start rofi (window switcher)
+bindsym $mod+Shift+d exec --no-startup-id rofi -monitor -4 -show window
+
+#use "xmodmap -pke" to get list of special keys
+#custom special key fixes
+
+#audio controls
+bindsym XF86AudioRaiseVolume exec ~/.dotfiles/scripts/i3blocks/volume.sh up
+bindsym XF86AudioLowerVolume exec ~/.dotfiles/scripts/i3blocks/volume.sh down
+bindsym XF86AudioMute exec ~/.dotfiles/scripts/i3blocks/volume.sh mute
+bindsym $mod+equal exec ~/.dotfiles/scripts/i3blocks/volume.sh up
+bindsym $mod+minus exec ~/.dotfiles/scripts/i3blocks/volume.sh down
+bindsym $mod+0 exec ~/.dotfiles/scripts/i3blocks/volume.sh mute
+
+#cmus controls
+bindsym $mod+p exec cmus-remote --pause
+bindsym $mod+bracketleft exec cmus-remote --prev
+bindsym $mod+bracketright exec cmus-remote --next
+
+#backlight controls (laptop monitor)
+bindsym $mod+Shift+minus exec ~/.dotfiles/scripts/i3blocks/brightness.sh down
+bindsym $mod+Shift+plus exec ~/.dotfiles/scripts/i3blocks/brightness.sh up
+
+# backlight controls (actual buttons on laptop)
+bindsym XF86MonBrightnessDown exec ~/.dotfiles/scripts/i3blocks/brightness.sh down
+bindsym XF86MonBrightnessUp exec ~/.dotfiles/scripts/i3blocks/brightness.sh up
+
+# Laptop AudioControls
+bindsym XF86AudioPlay exec ~/.dotfiles/scripts/spotify.sh 1
+bindsym XF86AudioPrev exec ~/.dotfiles/scripts/spotify.sh 5
+bindsym XF86AudioNext exec ~/.dotfiles/scripts/spotify.sh 4
+
+bindsym $mod+Escape exec "~/.dotfiles/scripts/i3exit lock"
+bindsym XF86Sleep exec "~/.dotfiles/scripts/i3exit suspend"
+bindsym $mod+grave exec ~/.dotfiles/scripts/toggle_touchpad.sh
+bindsym --release Print exec scrot -e 'mv $f /tmp/screenshots/ && eog /tmp/screenshots/$f'
+bindsym --release $mod+Print exec scrot -u -e 'mv $f /tmp/screenshots/ && eog /tmp/screenshots/$f'
+bindsym --release $mod+Shift+Print exec scrot -s -e 'mv $f /tmp/screenshots/ && eog /tmp/screenshots/$f'
+
+# move workspace to left and right monitors
+bindsym $mod+Shift+bracketleft move workspace to output left
+bindsym $mod+Shift+bracketright move workspace to output right
+
+# vi keybindings
+set $vi_left h
+set $vi_down j
+set $vi_up k
+set $vi_right l
+
+# change focus
+bindsym $mod+$vi_left focus left
+bindsym $mod+$vi_down focus down
+bindsym $mod+$vi_up focus up
+bindsym $mod+$vi_right focus right
+
+# move focused window
+bindsym $mod+Shift+$vi_left move left
+bindsym $mod+Shift+$vi_down move down
+bindsym $mod+Shift+$vi_up move up
+bindsym $mod+Shift+$vi_right move right
+
+# split in burger (horizontal) orientation
+bindsym $mod+b split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+q layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+#bindsym $mod+p focus parent
+
+# Custom binds
+# Bind for vim-anywhere
+bindsym $mod+Shift+v exec ~/.vim-anywhere/bin/run
+# float termite
+bindsym $mod+Shift+Return exec termite --class "float-window"
+bindsym $mod+Shift+t exec  termite --class "float-window"
+# Slop for custom size terminal
+bindsym --release $mod+Shift+x exec --no-startup-id "bash ~/.dotfiles/scripts/t.sh"
+# Bind ranger
+bindsym $mod+Shift+f exec termite --class "float-window" -e ~/.dotfiles/scripts/start_ranger.sh 
+# Bind google-chrome and firefox
+bindsym $mod+backslash exec google-chrome-stable
+bindsym $mod+Shift+backslash exec firefox
+# Mount/unmount partitions
+bindsym $mod+m exec termite --class="float-window" -e "$HOME/.dotfiles/scripts/mount-unmount.sh mount"
+bindsym $mod+Shift+m exec termite --class="float-window" -e "$HOME/.dotfiles/scripts/mount-unmount.sh unmount"
+
+# --------------------------------------------
+
+set $workspace1 "1:  "
+set $workspace2 "2: "
+set $workspace3 "3: "
+set $workspace4 "4: "
+set $workspace5 "5: "
+set $workspace6 "6: "
+set $workspace7 "7: "
+set $workspace8 "8: "
+set $workspace9 "9: "
+
+# switch to workspace
+bindsym $mod+1 workspace $workspace1 
+bindsym $mod+2 workspace $workspace2
+bindsym $mod+3 workspace $workspace3
+bindsym $mod+4 workspace $workspace4
+bindsym $mod+5 workspace $workspace5
+bindsym $mod+6 workspace $workspace6
+bindsym $mod+7 workspace $workspace7
+bindsym $mod+8 workspace $workspace8
+bindsym $mod+9 workspace $workspace9
+
+bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+Shift+Tab exec "~/.dotfiles/scripts/switch_workspace_dmenu.sh"
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $workspace1
+bindsym $mod+Shift+2 move container to workspace $workspace2
+bindsym $mod+Shift+3 move container to workspace $workspace3
+bindsym $mod+Shift+4 move container to workspace $workspace4
+bindsym $mod+Shift+5 move container to workspace $workspace5
+bindsym $mod+Shift+6 move container to workspace $workspace6
+bindsym $mod+Shift+7 move container to workspace $workspace7
+bindsym $mod+Shift+8 move container to workspace $workspace8
+bindsym $mod+Shift+9 move container to workspace $workspace9
+
+## Assign workspaces
+
+# Browsers
+assign [class="Firefox"] $workspace1
+assign [class="Google-chrome"] $workspace1
+
+# Terminals
+assign [class="Termite"] $workspace2
+
+# File Manager
+assign [class="Nautilus"] $workspace3
+
+# PDF viewers
+assign [class="Evince"] $workspace4
+assign [class="Zathura"] $workspace4
+
+# Audio/Video
+for_window [class="Spotify"] move to workspace $workspace6      #Refer to https://github.com/i3/i3/issues/2060
+assign [class="vlc"] $workspace6
+
+# VMs
+assign [class="Vmware"] $workspace5
+assign [class="VirtualBox Machine"] $workspace5 
+assign [class="VirtualBox Manager"] $workspace5
+
+# Conversations
+assign [class="Slack"] $workspace7
+assign [class="Protonmail Desktop"] $workspace7
+assign [class="termite-weechat"] $workspace7
+assign [class="termite-reddit"] $workspace7
+
+# Editors
+assign [class="Subl3"] $workspace8
+assign [class="TeXstudio"] $workspace8
+assign [class="jetbrains-studio"] $workspace8
+assign [class="Remarkable"] $workspace8
+
+# Torrent Client 
+assign [class="Deluge"] $workspace8
+
+# Miscellaneous
+
+
+# First workspace on Laptop monitor while second on another monitor (if connected)
+workspace $workspace1 output eDP-1
+workspace $workspace2 output HDMI-1
+
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+    bindsym $vi_left resize shrink width 2 px or 2 ppt
+    bindsym $vi_up resize grow height 2 px or 2 ppt
+    bindsym $vi_down resize shrink height 2 px or 2 ppt
+    bindsym $vi_right resize grow width 2 px or 2 ppt
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 2 px or 2 ppt
+    bindsym Down resize grow height 2 px or 2 ppt
+    bindsym Up resize shrink height 2 px or 2 ppt
+    bindsym Right resize grow width 2 px or 2 ppt
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# ------------------------
+# Add mode for lock, logout, suspend, hibernate, reboot and poweroff
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym e exec --no-startup-id i3exit logout, mode "default"
+    bindsym s exec --no-startup-id i3exit suspend, mode "default"
+    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym r exec --no-startup-id i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Delete mode "$mode_system"
+
+# ----------------
+
+# Display mode to switch from laptop, dual and clone mode
+
+set $display_mode "Set display mode (l)aptop (d)ual monitor (c)lone (h)dmi"
+mode $display_mode {
+    bindsym l exec --no-startup-id "~/.dotfiles/scripts/set-monitor-mode.sh laptop"; mode "default"
+    bindsym d exec --no-startup-id "~/.dotfiles/scripts/set-monitor-mode.sh dual"; mode "default"
+    bindsym c exec --no-startup-id "~/.dotfiles/scripts/set-monitor-mode.sh clone"; mode "default"
+    bindsym h exec --no-startup-id "~/.dotfiles/scripts/set-monitor-mode.sh hdmi"; mode "default"
+
+   
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Insert mode $display_mode
+
+# ------------------------------------------------
+
+# Mode to set a monitor as primary
+set $primary_mode "Set primary monitor (l)aptop (h)dmi"
+mode $primary_mode {
+    bindsym l exec --no-startup-id "~/.dotfiles/scripts/set-primary-monitor.sh laptop"; mode "default"
+    bindsym h exec --no-startup-id "~/.dotfiles/scripts/set-primary-monitor.sh hdmi"; mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"    
+}
+bindsym $mod+Shift+p mode $primary_mode
+
+# -----------------------------------------
+
+exec_always --no-startup-id ~/.dotfiles/.config/polybar/launch_polybar.sh 
+
+#bar {
+#       status_command i3blocks -c ~/.config/i3/i3blocks.conf 2> ~/.config/i3/.i3blocks.err
+#       workspace_buttons yes
+#       #output eDP-1-1
+#       tray_output primary
+#       mode dock
+#       position top
+#       height 18
+#       font pango: Fira Mono Medium for Powerline, FontAwesome 11
+#       colors {
+#           background #131211
+#           separator $primary
+#           statusline $primary
+#                    #         Border    Inner    Text
+#           focused_workspace $primary $primary $back
+#           active_workspace #131211 #131211 $primary
+#           inactive_workspace #131211 #131211 $primary
+#           urgent_workspace #CC241D #CC241D #EBDBB2
+#       }
+#    }
+# vim:filetype=i3
+
